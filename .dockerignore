@@ -1,0 +1,8 @@
+artifacts/*
+!artifacts/.gitkeep
+__pycache__/
+*.pyc
+.git
+processed_data/
+model_outputs/
+notebooks/.ipynb_checkpoints

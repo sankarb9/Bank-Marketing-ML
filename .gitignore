@@ -1,0 +1,10 @@
+artifacts/*
+!artifacts/.gitkeep
+__pycache__/
+*.pyc
+.venv/
+venv/
+processed_data/
+model_outputs/
+.ipynb_checkpoints/
+.DS_Store
