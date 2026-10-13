@@ -62,3 +62,72 @@ Run `notebooks/01_preprocessing.ipynb` first (creates `processed_data/`), then `
 `duration` is excluded because it is only known after the call (data leakage). `pdays = -1` means never contacted.
 Saved models depend on the scikit-learn version that trained them: retrain after upgrading.
 #
+
+# Bank Marketing Subscription Prediction
+
+## Project Overview
+
+This project predicts whether a bank client will subscribe to a term deposit (`y = yes/no`) using information available **before the marketing call**. It combines machine learning models with rule-based reasoning and first-order logic to support data-driven marketing decisions.
+
+## Dataset
+
+- **Source:** UCI Bank Marketing Dataset (`bank-full.csv`)
+- **Total clients:** 45,211 after de-duplication
+- **Training set:** 36,168 clients (80%)
+- **Test set:** 9,043 clients (20%)
+- **Split strategy:** Stratified train-test split
+- **Target variable:** `y` — subscription to a term deposit (`yes = 1`, `no = 0`)
+
+## Data Preprocessing
+
+The following preprocessing steps are applied:
+
+- Removed duplicate records.
+- Encoded the target variable as binary values.
+- Converted `pdays = -1` into a `previously_contacted` indicator.
+- Converted binary categorical columns into `0/1` values.
+- Applied one-hot encoding to other categorical features, retaining the `unknown` category.
+- Imputed missing numeric values using the median.
+- Clipped numeric features at the training-set 1st and 99th percentiles.
+- Standardised numeric features.
+- Fitted preprocessing transformations using the training set only to prevent data leakage.
+
+## AI Algorithms
+
+The project implements four machine learning approaches:
+
+1. **Neural Network:** An ensemble of five multilayer perceptrons (MLPs), trained using backpropagation.
+2. **Logistic Regression:** A classification model that estimates the likelihood of subscription.
+3. **Decision Tree:** A tree-based model that learns interpretable decision rules.
+4. **Random Forest:** An ensemble of decision trees that captures more complex patterns.
+
+Decision thresholds are selected using cross-validated training predictions. Class weights are used to address class imbalance in Logistic Regression and the tree-based models, while the neural network ensemble relies on threshold tuning.
+
+## AI Techniques
+
+### 1. Rule-Based Reasoning
+
+The system uses predefined rules to derive conclusions from client information. Forward chaining applies available facts and rules to infer additional facts until a conclusion is reached or no further rules can be applied.
+
+### 2. First-Order Logic
+
+A first-order-logic knowledge base represents facts and relationships about clients and subscription outcomes.
+
+### 3. Backward Chaining
+
+Backward chaining uses a goal-driven approach. It begins with a query or goal and works backward through relevant rules to determine whether the available facts support the conclusion.
+
+These techniques complement machine learning by providing a structured, logic-based approach to reasoning.
+
+## Limitations
+
+- **Call duration excluded:** Call duration is not used because it is unavailable before the call. This limits the maximum predictive performance but makes the model more useful for pre-call targeting.
+- **Single-campaign dataset:** The data come from one marketing campaign, so results may not generalise to other campaigns, banks, or customer populations.
+- **Missed subscribers:** Although the model ranks clients effectively, it misses roughly half of actual subscribers at the selected operating threshold.
+- **Decision support only:** Predictions should help prioritise marketing calls rather than determine individual customer decisions automatically.
+
+## Conclusion
+
+This project combines neural networks, traditional machine learning algorithms, rule-based reasoning, forward chaining, backward chaining, and first-order logic to predict term-deposit subscriptions.
+
+The primary objective is to support more informed marketing-call prioritisation using information available before contact, while recognising the limitations of the dataset and predictive models.
